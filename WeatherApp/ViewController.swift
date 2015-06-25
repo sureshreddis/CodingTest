@@ -72,20 +72,25 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
     
     // MARK:- Segmented Control Index Change
     @IBAction func segControlTapped(sender: AnyObject) {
-        var segController:UISegmentedControl = sender as! UISegmentedControl
-        switch self.segControl.selectedSegmentIndex {
-        case 0:  if let reportModel = self.serviceParserObject.weatherReportArray?[0] {
-            self.displayData(reportModel)
+        
+        var title = self.segControl.titleForSegmentAtIndex(sender.selectedSegmentIndex)
+        var arrayOfStrings:[String] = self.serviceParserObject.arrayOfItems!
+        var checkForString:Bool = false
+        for titleString in arrayOfStrings {
+            if title == titleString {
+                checkForString = true
+                break
+            } else {
+                checkForString = false
             }
-        case 1:  if let reportModel = self.serviceParserObject.weatherReportArray?[1] {
-            self.displayData(reportModel)
+        }
+        if (checkForString == true) {
+            if let reportModel = self.serviceParserObject.weatherReportArray?[sender.selectedSegmentIndex] {
+                self.displayData(reportModel)
             }
-        case 2:  if let reportModel = self.serviceParserObject.weatherReportArray?[2] {
-            self.displayData(reportModel)
-            }
-        default:  if let reportModel = self.serviceParserObject.weatherReportArray?[3] {
-            self.displayData(reportModel)
-            }
+        }
+        else {
+            self.displayAlert("Data is not available for \(title)")
         }
     }
     
@@ -108,7 +113,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
         return (latitude,longitude)
         }
         else {
-           self.displayAlert("Not able to fetch Location,Please check Location Services in Settings")
+           self.displayAlert("Not able to fetch Location,Please check Location Services in Settings.By Default Location is set to 0.00")
             return (0.00,0.00)
         }
         return (0.00,0.00)
